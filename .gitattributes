@@ -1,0 +1,18 @@
+# Unity WebGL build artifacts — track with Git LFS
+# These files are large binaries that should not be stored as regular git objects.
+# Run `git lfs install` once before committing build files.
+
+*.data        filter=lfs diff=lfs merge=lfs -text
+*.data.gz     filter=lfs diff=lfs merge=lfs -text
+*.data.br     filter=lfs diff=lfs merge=lfs -text
+*.wasm        filter=lfs diff=lfs merge=lfs -text
+*.wasm.gz     filter=lfs diff=lfs merge=lfs -text
+*.wasm.br     filter=lfs diff=lfs merge=lfs -text
+*.unityweb    filter=lfs diff=lfs merge=lfs -text
+*.bundle      filter=lfs diff=lfs merge=lfs -text
+
+# Large media
+*.zip         filter=lfs diff=lfs merge=lfs -text
+*.gif         filter=lfs diff=lfs merge=lfs -text
+*.mp4         filter=lfs diff=lfs merge=lfs -text
+*.webm        filter=lfs diff=lfs merge=lfs -text

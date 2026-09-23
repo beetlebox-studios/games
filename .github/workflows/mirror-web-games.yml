@@ -1,0 +1,72 @@
+# Mirror web games — pulls each game listed in web-games.json from its source
+# repo (private repos OK), builds it with scripts/build-web-game.mjs, and
+# commits the output to <slug>/build/ so GitHub Pages serves it.
+#
+# Setup (once): add a repo secret GAME_SOURCE_TOKEN — a fine-grained personal
+# access token with read-only "Contents" access to every source repo listed in
+# web-games.json.
+
+name: Mirror web games
+
+on:
+  schedule:
+    - cron: '0 9 * * *'   # daily, 09:00 UTC
+  workflow_dispatch:       # "Run workflow" button in the Actions tab
+  repository_dispatch:     # lets a source repo trigger a rebuild on push
+    types: [web-game-updated]
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: mirror-web-games
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build each web game
+        env:
+          TOKEN: ${{ secrets.GAME_SOURCE_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "$TOKEN" ]; then echo "::error::GAME_SOURCE_TOKEN secret is not set"; exit 1; fi
+          jq -c '.[]' web-games.json | while read -r game; do
+            slug=$(jq -r .slug <<<"$game")
+            repo=$(jq -r .repo <<<"$game")
+            ref=$(jq -r '.ref // "main"' <<<"$game")
+            echo "::group::$slug ← $repo@$ref"
+            git clone --depth 1 --branch "$ref" "https://x-access-token:${TOKEN}@github.com/${repo}.git" "$RUNNER_TEMP/src-$slug"
+            node scripts/build-web-game.mjs "$slug" "$RUNNER_TEMP/src-$slug"
+            echo "::endgroup::"
+          done
+
+      - name: Commit changed builds
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          slugs=$(jq -r '.[].slug' web-games.json)
+          for s in $slugs; do git add -A "$s/build"; done
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Mirror web game builds"
+            git push
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Pushes made with GITHUB_TOKEN don't always kick off a Pages rebuild — request one
+      - name: Request Pages build
+        if: steps.commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Pages build request failed (site may still update on its own)"

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lexwright · BeetleBox Studios</title>
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/beetlebox-studios/branding-assets/main/logo/beetle_square.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --hue:        140;
+      --primary:    oklch(0.75 0.18 var(--hue));
+      --page-bg:    oklch(0.14 0.012 var(--hue));
+      --card-bg:    oklch(0.20 0.014 var(--hue));
+      --float-bg:   oklch(0.17 0.013 var(--hue));
+      --text:       oklch(0.92 0.005 var(--hue));
+      --text-dim:   oklch(0.62 0.01  var(--hue));
+      --text-muted: oklch(0.42 0.008 var(--hue));
+      --border:     color-mix(in oklch, white 7%, transparent);
+      --border-strong: color-mix(in oklch, white 14%, transparent);
+      --radius:     12px;
+      --radius-lg:  16px;
+      --shadow:     0 2px 12px rgba(0,0,0,0.5);
+      --shadow-lg:  0 8px 32px rgba(0,0,0,0.7);
+      --ease:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --navbar-h:   4.5rem;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; background: var(--page-bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    a { color: inherit; text-decoration: none; }
+    #mobile-wall { display: none; position: fixed; inset: 0; z-index: 9999; background: var(--page-bg); flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 2rem; text-align: center; }
+    .mobile-wall__icon { font-size: 2.5rem; color: var(--text-muted); }
+    .mobile-wall__heading { font-size: 1.4rem; font-weight: 300; color: var(--text); letter-spacing: -0.02em; }
+    .mobile-wall__body { font-size: 0.88rem; line-height: 1.7; color: var(--text-dim); max-width: 300px; }
+    .mobile-wall__btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.5rem; border-radius: 999px; font-size: 0.82rem; font-weight: 500; color: var(--primary); background: color-mix(in oklch, var(--primary) 12%, transparent); border: 1px solid color-mix(in oklch, var(--primary) 30%, transparent); cursor: pointer; transition: background 0.15s var(--ease); }
+    .mobile-wall__btn:hover { background: color-mix(in oklch, var(--primary) 20%, transparent); }
+    @media (max-width: 768px) { #mobile-wall { display: flex; } body > *:not(#mobile-wall) { visibility: hidden; } }
+    #navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0.75rem 1.5rem; }
+    .navbar-inner { max-width: 1100px; margin: 0 auto; height: var(--navbar-h); display: flex; align-items: center; gap: 1rem; background: var(--float-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0 1.25rem; backdrop-filter: blur(20px); box-shadow: var(--shadow); }
+    .navbar-logo { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); padding: 0.5rem 0.75rem; border-radius: var(--radius); transition: color 0.15s var(--ease), background 0.15s var(--ease); white-space: nowrap; }
+    .navbar-logo:hover { color: var(--primary); background: color-mix(in oklch, var(--primary) 10%, transparent); }
+    .navbar-sep { color: var(--text-muted); font-size: 0.9rem; opacity: 0.4; }
+    .navbar-game-title { font-size: 0.82rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .navbar-actions { margin-left: auto; display: flex; gap: 0.5rem; }
+    .nav-btn { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 500; color: var(--text-dim); padding: 0.5rem 0.875rem; border-radius: var(--radius); border: none; background: transparent; cursor: pointer; transition: color 0.15s var(--ease), background 0.15s var(--ease); white-space: nowrap; text-decoration: none; }
+    .nav-btn:hover { color: var(--text); background: color-mix(in oklch, white 6%, transparent); }
+    .nav-btn--primary { color: var(--primary); background: color-mix(in oklch, var(--primary) 12%, transparent); border: 1px solid color-mix(in oklch, var(--primary) 25%, transparent); }
+    .nav-btn--primary:hover { background: color-mix(in oklch, var(--primary) 20%, transparent); }
+    main { flex: 1; padding-top: calc(var(--navbar-h) + 1.5rem + 0.75rem); padding-bottom: 4rem; max-width: 1100px; margin: 0 auto; width: 100%; padding-left: 1.5rem; padding-right: 1.5rem; }
+    .game-info { display: flex; align-items: baseline; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .game-title { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 300; letter-spacing: -0.02em; color: var(--text); }
+    .game-meta-list { display: flex; flex-wrap: wrap; gap: 0.375rem; align-items: center; }
+    .game-meta-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); padding: 0.2rem 0.6rem; border-radius: 999px; background: color-mix(in oklch, var(--primary) 10%, transparent); border: 1px solid color-mix(in oklch, var(--primary) 22%, transparent); opacity: 0.9; }
+    .unity-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow-lg); }
+    #unity-canvas { width: 100%; height: 100%; display: block; }
+    .unity-loader { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; background: var(--card-bg); transition: opacity 0.4s var(--ease); z-index: 10; }
+    .unity-loader.hidden { opacity: 0; pointer-events: none; }
+    .loader-logo { width: 56px; height: 56px; background: var(--primary); -webkit-mask-image: url('https://raw.githubusercontent.com/beetlebox-studios/branding-assets/main/logo/beetle_square.png'); -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; mask-image: url('https://raw.githubusercontent.com/beetlebox-studios/branding-assets/main/logo/beetle_square.png'); mask-size: contain; mask-repeat: no-repeat; mask-position: center; }
+    .loader-bar-wrap { width: 200px; height: 4px; background: var(--border); border-radius: 999px; overflow: hidden; }
+    .loader-bar { height: 100%; width: 0%; background: var(--primary); border-radius: 999px; transition: width 0.2s var(--ease); }
+    .loader-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-muted); }
+    .unity-fullscreen-btn { position: absolute; bottom: 10px; right: 10px; z-index: 5; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: color-mix(in oklch, var(--float-bg) 85%, transparent); border: 1px solid var(--border); border-radius: 50%; color: var(--text-dim); font-size: 0.75rem; cursor: pointer; backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.2s var(--ease), color 0.15s var(--ease), background 0.15s var(--ease); }
+    .unity-wrap:hover .unity-fullscreen-btn { opacity: 1; }
+    .unity-fullscreen-btn:hover { color: var(--text); background: color-mix(in oklch, var(--primary) 20%, var(--float-bg)); border-color: color-mix(in oklch, var(--primary) 50%, transparent); }
+    .credits-section { margin-top: 2rem; }
+    .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--primary); margin-bottom: 0.75rem; opacity: 0.8; }
+    .credits-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .credit-tag { font-size: 0.78rem; padding: 0.3rem 0.875rem; border-radius: 999px; background: color-mix(in oklch, white 5%, transparent); border: 1px solid var(--border); color: var(--text-dim); }
+    footer { border-top: 1px dashed color-mix(in oklch, white 10%, transparent); padding: 1.5rem; text-align: center; }
+    .footer-copy { font-size: 0.72rem; color: var(--text-muted); }
+    /* Web build: fixed-size page in an iframe, scaled to fit the same 16:9 frame the Unity games use */
+    .unity-wrap iframe { position: absolute; top: 0; left: 0; border: 0; background: #fff; transform-origin: 0 0; }
+  </style>
+</head>
+<body>
+
+<div id="mobile-wall">
+  <i class="fa-solid fa-desktop mobile-wall__icon"></i>
+  <h1 class="mobile-wall__heading">Desktop only</h1>
+  <p class="mobile-wall__body">This game requires a keyboard and mouse and isn't available on mobile devices.</p>
+  <a href="https://beetlebox-studios.github.io" class="mobile-wall__btn">
+    <i class="fa-solid fa-arrow-left"></i> Back to BeetleBox
+  </a>
+</div>
+
+<header id="navbar">
+  <div class="navbar-inner">
+    <a href="https://beetlebox-studios.github.io" class="navbar-logo">BeetleBox</a>
+    <span class="navbar-sep">/</span>
+    <span class="navbar-game-title" id="nav-title"></span>
+    <div class="navbar-actions">
+      <a href="https://beetlebox-studios.github.io#work" class="nav-btn"><i class="fa-solid fa-arrow-left"></i> All Games</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="game-info">
+    <h1 class="game-title" id="game-title"></h1>
+    <div class="game-meta-list" id="game-meta-list"></div>
+  </div>
+  <div class="unity-wrap" id="unity-wrap">
+    <iframe id="game-frame" src="build/index.html" title="Lexwright"></iframe>
+    <button class="unity-fullscreen-btn" id="fullscreen-btn" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+  </div>
+</main>
+
+<footer><p class="footer-copy" id="footer-copy"></p></footer>
+
+<script>
+  const GAME = {
+    title: 'Lexwright',
+    meta:  ['Vite JS', 'Unity 2D', 'Retro', '2026'],
+    // Starting size of the web build's page — replaced by the measured size of
+    // the game's content once it loads, so new builds fit automatically
+    frame: { width: 1480, height: 620 },
+    framePad: 0,
+  };
+
+  document.title = `${GAME.title} · BeetleBox Studios`;
+  document.getElementById('nav-title').textContent  = GAME.title;
+  document.getElementById('game-title').textContent = GAME.title;
+  const metaList = document.getElementById('game-meta-list');
+  GAME.meta.forEach(tag => { const s = document.createElement('span'); s.className = 'game-meta-tag'; s.textContent = tag; metaList.appendChild(s); });
+  document.getElementById('footer-copy').textContent = `© BeetleBox Studios ${new Date().getFullYear()} · Philadelphia, PA`;
+
+  // Scale the fixed-size iframe to fit (and center in) the frame, windowed or fullscreen
+  const wrap  = document.getElementById('unity-wrap');
+  const frame = document.getElementById('game-frame');
+  function fitFrame() {
+    frame.style.width  = GAME.frame.width  + 'px';
+    frame.style.height = GAME.frame.height + 'px';
+    const W = wrap.clientWidth, H = wrap.clientHeight;
+    const scale = Math.min(W / GAME.frame.width, H / GAME.frame.height);
+    frame.style.transform = `scale(${scale})`;
+    frame.style.left = `${(W - GAME.frame.width  * scale) / 2}px`;
+    frame.style.top  = `${(H - GAME.frame.height * scale) / 2}px`;
+  }
+  new ResizeObserver(fitFrame).observe(wrap);
+  fitFrame();
+
+  // Measure the game's own content (same-origin iframe) and size the frame to it
+  function watchGameSize() {
+    const doc = frame.contentDocument;
+    const content = doc?.body?.firstElementChild;
+    if (!content || frame.dataset.watching) return;
+    frame.dataset.watching = '1';
+    const measure = () => {
+      const w = content.scrollWidth, h = content.scrollHeight;
+      if (!w || !h) return;
+      GAME.frame = { width: w + GAME.framePad * 2, height: h + GAME.framePad * 2 };
+      fitFrame();
+    };
+    new frame.contentWindow.ResizeObserver(measure).observe(content);
+    measure();
+  }
+  frame.addEventListener('load', watchGameSize);
+  watchGameSize(); // the iframe may have finished loading before this script ran
+
+  document.getElementById('fullscreen-btn').addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen(); else wrap.requestFullscreen();
+  });
+</script>
+</body>
+</html>

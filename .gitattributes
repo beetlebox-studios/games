@@ -1,18 +1,11 @@
-# Unity WebGL build artifacts — track with Git LFS
-# These files are large binaries that should not be stored as regular git objects.
-# Run `git lfs install` once before committing build files.
+# NOTE: GitHub Pages does NOT serve Git LFS files — it serves the tiny LFS
+# pointer text instead, which breaks Unity WebGL builds ("Failed to load.").
+# So build artifacts (.data, .wasm, etc.) are committed as regular files.
+# Keep each file under GitHub's 100 MB limit (enable Brotli/Gzip compression
+# in Unity's WebGL player settings if a build gets too big).
 
-*.data        filter=lfs diff=lfs merge=lfs -text
-*.data.gz     filter=lfs diff=lfs merge=lfs -text
-*.data.br     filter=lfs diff=lfs merge=lfs -text
-*.wasm        filter=lfs diff=lfs merge=lfs -text
-*.wasm.gz     filter=lfs diff=lfs merge=lfs -text
-*.wasm.br     filter=lfs diff=lfs merge=lfs -text
-*.unityweb    filter=lfs diff=lfs merge=lfs -text
-*.bundle      filter=lfs diff=lfs merge=lfs -text
-
-# Large media
+# Source archives only — never referenced by the site
 *.zip         filter=lfs diff=lfs merge=lfs -text
-*.gif         filter=lfs diff=lfs merge=lfs -text
-*.mp4         filter=lfs diff=lfs merge=lfs -text
-*.webm        filter=lfs diff=lfs merge=lfs -text
+
+*.data        binary
+*.wasm        binary

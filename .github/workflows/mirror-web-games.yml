@@ -2,9 +2,9 @@
 # repo (private repos OK), builds it with scripts/build-web-game.mjs, and
 # commits the output to <slug>/build/ so GitHub Pages serves it.
 #
-# Setup (once): add a repo secret GAME_SOURCE_TOKEN — a fine-grained personal
-# access token with read-only "Contents" access to every source repo listed in
-# web-games.json.
+# Setup (once per game): add a repo secret named by that game's "tokenSecret"
+# in web-games.json (e.g. LEX_DEMO_SRC_TOKEN) — a fine-grained personal access
+# token with read-only "Contents" access to that game's source repo.
 
 name: Mirror web games
 
@@ -35,14 +35,17 @@ jobs:
 
       - name: Build each web game
         env:
-          TOKEN: ${{ secrets.GAME_SOURCE_TOKEN }}
+          SECRETS: ${{ toJSON(secrets) }}
         run: |
           set -euo pipefail
-          if [ -z "$TOKEN" ]; then echo "::error::GAME_SOURCE_TOKEN secret is not set"; exit 1; fi
           jq -c '.[]' web-games.json | while read -r game; do
             slug=$(jq -r .slug <<<"$game")
             repo=$(jq -r .repo <<<"$game")
             ref=$(jq -r '.ref // "main"' <<<"$game")
+            secret=$(jq -r .tokenSecret <<<"$game")
+            TOKEN=$(jq -r --arg s "$secret" '.[$s] // empty' <<<"$SECRETS")
+            if [ -z "$TOKEN" ]; then echo "::error::secret $secret is not set (needed for $slug)"; exit 1; fi
+            echo "::add-mask::$TOKEN"
             echo "::group::$slug ← $repo@$ref"
             git clone --depth 1 --branch "$ref" "https://x-access-token:${TOKEN}@github.com/${repo}.git" "$RUNNER_TEMP/src-$slug"
             node scripts/build-web-game.mjs "$slug" "$RUNNER_TEMP/src-$slug"

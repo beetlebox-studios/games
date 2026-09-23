@@ -2,6 +2,7 @@
   {
     "slug": "lexwright",
     "repo": "elan-rubin/lexwright-demo",
-    "ref": "main"
+    "ref": "main",
+    "tokenSecret": "LEX_DEMO_SRC_TOKEN"
   }
 ]

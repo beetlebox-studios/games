@@ -1,6 +1,6 @@
 // Build a Vite web game from its source checkout into <slug>/build/.
 //
-//   node scripts/build-web-game.mjs <slug> <source-dir>
+//   node scripts/build-web-game.mjs <slug> <source-dir> [out-dir]
 //
 // Works on sources that were written to run from the site root (e.g.
 // fetch('/words/x.json')) without changing the source repo:
@@ -14,15 +14,15 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const [slug, srcArg] = process.argv.slice(2);
+const [slug, srcArg, outName = 'build'] = process.argv.slice(2);
 if (!slug || !srcArg) {
-  console.error('usage: node scripts/build-web-game.mjs <slug> <source-dir>');
+  console.error('usage: node scripts/build-web-game.mjs <slug> <source-dir> [out-dir]');
   process.exit(1);
 }
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
 const src  = path.resolve(srcArg);
-const out  = path.join(root, slug, 'build');
+const out  = path.join(root, slug, outName);
 const run  = cmd => execSync(cmd, { cwd: src, stdio: 'inherit' });
 
 // 1. Strip platform-specific native packages from direct dependencies

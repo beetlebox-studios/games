@@ -27,3 +27,4 @@ NOTES.md
 
 # web game builds are produced by the deploy workflow
 lexwright/build/
+lexwright/beta/

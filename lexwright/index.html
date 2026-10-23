@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    if (matchMedia('(pointer: coarse)').matches) location.replace('build/' + location.search + location.hash);
+  </script>
   <title>Book Wyrm · BeetleBox Studios</title>
   <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/beetlebox-studios/branding-assets/main/logo/beetle_square.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />

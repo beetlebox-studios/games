@@ -51,7 +51,7 @@
     .game-title { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 300; letter-spacing: -0.02em; color: var(--text); }
     .game-meta-list { display: flex; flex-wrap: wrap; gap: 0.375rem; align-items: center; }
     .game-meta-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); padding: 0.2rem 0.6rem; border-radius: 999px; background: color-mix(in oklch, var(--primary) 10%, transparent); border: 1px solid color-mix(in oklch, var(--primary) 22%, transparent); opacity: 0.9; }
-    .unity-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #8a8a8a; border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow-lg); }
+    .unity-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow-lg); }
     #unity-canvas { width: 100%; height: 100%; display: block; }
     .unity-loader { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; background: var(--card-bg); transition: opacity 0.4s var(--ease); z-index: 10; }
     .unity-loader.hidden { opacity: 0; pointer-events: none; }
@@ -69,7 +69,7 @@
     footer { border-top: 1px dashed color-mix(in oklch, white 10%, transparent); padding: 1.5rem; text-align: center; }
     .footer-copy { font-size: 0.72rem; color: var(--text-muted); }
     /* Web build: fixed-size page in an iframe, scaled to fit the same 16:9 frame the Unity games use */
-    .unity-wrap iframe { position: absolute; top: 0; left: 0; border: 0; background: #8a8a8a; transform-origin: 0 0; }
+    .unity-wrap iframe { position: absolute; top: 0; left: 0; border: 0; background: #000; transform-origin: 0 0; }
   </style>
 </head>
 <body>

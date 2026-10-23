@@ -1,15 +1,17 @@
-# Mirror web games — pulls each game listed in web-games.json from its source
-# repo (private repos OK), builds it with scripts/build-web-game.mjs, and
-# commits the output to <slug>/build/ so GitHub Pages serves it.
+# Deploy games — builds each web game listed in web-games.json from its source
+# repo (private repos OK) with scripts/build-web-game.mjs, then publishes this
+# repo plus those builds to GitHub Pages. Nothing is committed back.
 #
 # Setup (once per game): add a repo secret named by that game's "tokenSecret"
 # in web-games.json (e.g. LEX_DEMO_SRC_TOKEN) — a fine-grained personal access
 # token with read-only "Contents" access to that game's source repo — and map
 # it into the build step's env below.
 
-name: Mirror web games
+name: Deploy games
 
 on:
+  push:
+    branches: [main]
   schedule:
     - cron: '0 9 * * *'   # daily, 09:00 UTC
   workflow_dispatch:       # "Run workflow" button in the Actions tab
@@ -17,15 +19,16 @@ on:
     types: [web-game-updated]
 
 permissions:
-  contents: write
+  contents: read
   pages: write
+  id-token: write
 
 concurrency:
-  group: mirror-web-games
+  group: pages
   cancel-in-progress: false
 
 jobs:
-  mirror:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,24 +56,18 @@ jobs:
             echo "::endgroup::"
           done
 
-      - name: Commit changed builds
-        id: commit
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          slugs=$(jq -r '.[].slug' web-games.json)
-          for s in $slugs; do git add -A "$s/build"; done
-          if git diff --cached --quiet; then
-            echo "No changes."
-          else
-            git commit -m "Mirror web game builds"
-            git push
-            echo "pushed=true" >> "$GITHUB_OUTPUT"
-          fi
+      - uses: actions/configure-pages@v5
 
-      # Pushes made with GITHUB_TOKEN don't always kick off a Pages rebuild — request one
-      - name: Request Pages build
-        if: steps.commit.outputs.pushed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "::warning::Pages build request failed (site may still update on its own)"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

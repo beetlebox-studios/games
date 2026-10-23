@@ -4,7 +4,8 @@
 #
 # Setup (once per game): add a repo secret named by that game's "tokenSecret"
 # in web-games.json (e.g. LEX_DEMO_SRC_TOKEN) — a fine-grained personal access
-# token with read-only "Contents" access to that game's source repo.
+# token with read-only "Contents" access to that game's source repo — and map
+# it into the build step's env below.
 
 name: Mirror web games
 
@@ -35,7 +36,7 @@ jobs:
 
       - name: Build each web game
         env:
-          SECRETS: ${{ toJSON(secrets) }}
+          LEX_DEMO_SRC_TOKEN: ${{ secrets.LEX_DEMO_SRC_TOKEN }}
         run: |
           set -euo pipefail
           jq -c '.[]' web-games.json | while read -r game; do
@@ -43,7 +44,7 @@ jobs:
             repo=$(jq -r .repo <<<"$game")
             ref=$(jq -r '.ref // "main"' <<<"$game")
             secret=$(jq -r .tokenSecret <<<"$game")
-            TOKEN=$(jq -r --arg s "$secret" '.[$s] // empty' <<<"$SECRETS")
+            TOKEN="${!secret:-}"
             if [ -z "$TOKEN" ]; then echo "::error::secret $secret is not set (needed for $slug)"; exit 1; fi
             echo "::add-mask::$TOKEN"
             echo "::group::$slug ← $repo@$ref"

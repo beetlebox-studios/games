@@ -24,3 +24,7 @@ TODO.md
 NOTES.md
 *.plan.md
 *_plan.md
+
+# web game builds are produced by the deploy workflow
+lexwright/build/
+lexwright/beta/

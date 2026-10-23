@@ -1,8 +1,11 @@
 [
   {
     "slug": "lexwright",
-    "repo": "beetlebox-studios/lexwright-demo",
+    "repo": "beetlebox-studios/book-wyrm",
     "ref": "main",
-    "tokenSecret": "LEX_DEMO_SRC_TOKEN"
+    "tokenSecret": "LEX_DEMO_SRC_TOKEN",
+    "channels": {
+      "beta": "beta"
+    }
   }
 ]

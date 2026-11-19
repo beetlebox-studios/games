@@ -35,19 +35,13 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; background: var(--page-bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
     a { color: inherit; text-decoration: none; }
-    #navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0.75rem 1.5rem; }
-    .navbar-inner { max-width: 1100px; margin: 0 auto; height: var(--navbar-h); display: flex; align-items: center; gap: 1rem; background: var(--float-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0 1.25rem; backdrop-filter: blur(20px); box-shadow: var(--shadow); }
-    .navbar-logo { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); padding: 0.5rem 0.75rem; border-radius: var(--radius); transition: color 0.15s var(--ease), background 0.15s var(--ease); white-space: nowrap; }
-    .navbar-logo:hover { color: var(--primary); background: color-mix(in oklch, var(--primary) 10%, transparent); }
-    .navbar-sep { color: var(--text-muted); font-size: 0.9rem; opacity: 0.4; }
-    .navbar-game-title { font-size: 0.82rem; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .navbar-actions { margin-left: auto; display: flex; gap: 0.5rem; }
     .nav-btn { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 500; color: var(--text-dim); padding: 0.5rem 0.875rem; border-radius: var(--radius); border: none; background: transparent; cursor: pointer; transition: color 0.15s var(--ease), background 0.15s var(--ease); white-space: nowrap; text-decoration: none; }
     .nav-btn:hover { color: var(--text); background: color-mix(in oklch, white 6%, transparent); }
     .nav-btn--primary { color: var(--primary); background: color-mix(in oklch, var(--primary) 12%, transparent); border: 1px solid color-mix(in oklch, var(--primary) 25%, transparent); }
     .nav-btn--primary:hover { background: color-mix(in oklch, var(--primary) 20%, transparent); }
     main { flex: 1; padding-top: calc(var(--navbar-h) + 1.5rem + 0.75rem); padding-bottom: 4rem; max-width: 1100px; margin: 0 auto; width: 100%; padding-left: 1.5rem; padding-right: 1.5rem; }
     .game-info { display: flex; align-items: baseline; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .game-actions { margin-left: auto; display: flex; gap: 0.5rem; align-self: center; }
     .game-title { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 300; letter-spacing: -0.02em; color: var(--text); }
     .game-meta-list { display: flex; flex-wrap: wrap; gap: 0.375rem; align-items: center; }
     .game-meta-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); padding: 0.2rem 0.6rem; border-radius: 999px; background: color-mix(in oklch, var(--primary) 10%, transparent); border: 1px solid color-mix(in oklch, var(--primary) 22%, transparent); opacity: 0.9; }
@@ -74,21 +68,16 @@
 </head>
 <body>
 
-<header id="navbar">
-  <div class="navbar-inner">
-    <a href="https://beetlebox-studios.github.io" class="navbar-logo">BeetleBox</a>
-    <span class="navbar-sep">/</span>
-    <span class="navbar-game-title" id="nav-title"></span>
-    <div class="navbar-actions">
-      <a href="https://beetlebox-studios.github.io#work" class="nav-btn"><i class="fa-solid fa-arrow-left"></i> All Games</a>
-    </div>
-  </div>
-</header>
+<header id="navbar"></header>
+<script src="https://beetlebox-studios.github.io/js/header.js" data-standalone></script>
 
 <main>
   <div class="game-info">
     <h1 class="game-title" id="game-title"></h1>
     <div class="game-meta-list" id="game-meta-list"></div>
+    <div class="game-actions">
+      <a href="https://beetlebox-studios.github.io#work" class="nav-btn"><i class="fa-solid fa-arrow-left"></i> All Games</a>
+    </div>
   </div>
   <div class="unity-wrap" id="unity-wrap">
     <iframe id="game-frame" src="build/index.html" title="Book Wyrm"></iframe>
@@ -109,7 +98,6 @@
   };
 
   document.title = `${GAME.title} · BeetleBox Studios`;
-  document.getElementById('nav-title').textContent  = GAME.title;
   document.getElementById('game-title').textContent = GAME.title;
   const metaList = document.getElementById('game-meta-list');
   GAME.meta.forEach(tag => { const s = document.createElement('span'); s.className = 'game-meta-tag'; s.textContent = tag; metaList.appendChild(s); });

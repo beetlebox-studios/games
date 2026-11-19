@@ -56,12 +56,12 @@ jobs:
             echo "::endgroup::"
             jq -r '.channels // {} | to_entries[] | "\(.key) \(.value)"' <<<"$game" | while read -r out branch; do
               url="https://x-access-token:${TOKEN}@github.com/${repo}.git"
-              if ! git ls-remote --exit-code --heads "$url" "$branch" >/dev/null; then
-                echo "::warning::$repo has no $branch branch, skipping $slug/$out"
+              echo "::group::$slug/$out ← $repo@$branch"
+              if ! git clone --depth 1 --branch "$branch" "$url" "$RUNNER_TEMP/src-$slug-$out" </dev/null; then
+                echo "::endgroup::"
+                echo "::warning::could not clone $repo@$branch, skipping $slug/$out"
                 continue
               fi
-              echo "::group::$slug/$out ← $repo@$branch"
-              git clone --depth 1 --branch "$branch" "$url" "$RUNNER_TEMP/src-$slug-$out" </dev/null
               node scripts/build-web-game.mjs "$slug" "$RUNNER_TEMP/src-$slug-$out" "$out" </dev/null
               echo "::endgroup::"
             done
